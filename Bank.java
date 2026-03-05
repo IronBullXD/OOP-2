@@ -19,37 +19,42 @@ public class Bank implements Transaction {
         return null;
     }
 
-    @Override
-    public void deposit(String accNumber, double amount) {
+    public void generateStatement(String accNumber) {
         Account acc = findAccount(accNumber);
         if (acc != null) {
-            acc.deposit(amount);
-            records.add(new TransactionRecord("Deposit", accNumber, amount));
+            BankStatement statement = new BankStatement(acc);
+            statement.printStatement();
         } else {
             System.out.println("Account not found.");
         }
     }
 
     @Override
-    public void withdraw(String accNumber, double amount) {
-        Account acc = findAccount(accNumber);
-        if (acc != null) {
-            acc.withdraw(amount);
-            records.add(new TransactionRecord("Withdraw", accNumber, amount));
+    public void deposit(Account account, double amount) {
+        if (account != null) {
+            account.deposit(amount);
+            records.add(new TransactionRecord("Deposit", account.getAccountNumber(), amount));
         } else {
             System.out.println("Account not found.");
         }
     }
 
     @Override
-    public void transfer(String fromAcc, String toAcc, double amount) {
-        Account sender = findAccount(fromAcc);
-        Account receiver = findAccount(toAcc);
+    public void withdraw(Account account, double amount) {
+        if (account != null) {
+            account.withdraw(amount);
+            records.add(new TransactionRecord("Withdraw", account.getAccountNumber(), amount));
+        } else {
+            System.out.println("Account not found.");
+        }
+    }
 
-        if (sender != null && receiver != null) {
-            sender.withdraw(amount);
-            receiver.deposit(amount);
-            records.add(new TransactionRecord("Transfer", fromAcc, amount));
+    @Override
+    public void transfer(Account fromAccount, Account toAccount, double amount) {
+        if (fromAccount != null && toAccount != null) {
+            fromAccount.withdraw(amount);
+            toAccount.deposit(amount);
+            records.add(new TransactionRecord("Transfer", fromAccount.getAccountNumber(), amount));
             System.out.println("Transfer successful.");
         } else {
             System.out.println("Invalid account number.");

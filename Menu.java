@@ -29,7 +29,8 @@ public class Menu {
             System.out.println("4. Withdraw");
             System.out.println("5. Transfer");
             System.out.println("6. View Accounts");
-            System.out.println("7. Exit");
+            System.out.println("7. Generate Bank Statement");
+            System.out.println("8. Exit");
             System.out.print("Choose option: ");
             choice = scanner.nextInt();
             scanner.nextLine(); 
@@ -54,13 +55,16 @@ public class Menu {
                     bank.showAllAccounts();
                     break;
                 case 7:
+                    generateStatement();
+                    break;
+                case 8:
                     System.out.println("Logging out... Thank you!");
                     break;
                 default:
                     System.out.println("Invalid choice.");
             }
 
-        } while (choice != 7);
+        } while (choice != 8);
     }
 
     private boolean loginPrompt() {
@@ -79,6 +83,12 @@ public class Menu {
             System.out.println("Invalid username or password.");
             return false;
         }
+    }
+
+    private void generateStatement() {
+        System.out.print("Account Number: ");
+        String accNo = scanner.nextLine();
+        bank.generateStatement(accNo);
     }
 
     private void createSavings() {
@@ -110,7 +120,12 @@ public class Menu {
         System.out.print("Amount: ");
         double amount = scanner.nextDouble();
         scanner.nextLine(); 
-        bank.deposit(accNo, amount);
+        Account account = bank.findAccount(accNo);
+        if (account != null) {
+            bank.deposit(account, amount);
+        } else {
+            System.out.println("Account not found.");
+        }
     }
 
     private void withdraw() {
@@ -119,7 +134,12 @@ public class Menu {
         System.out.print("Amount: ");
         double amount = scanner.nextDouble();
         scanner.nextLine();
-        bank.withdraw(accNo, amount);
+        Account account = bank.findAccount(accNo);
+        if (account != null) {
+            bank.withdraw(account, amount);
+        } else {
+            System.out.println("Account not found.");
+        }
     }
 
     private void transfer() {
@@ -130,6 +150,12 @@ public class Menu {
         System.out.print("Amount: ");
         double amount = scanner.nextDouble();
         scanner.nextLine();
-        bank.transfer(from, to, amount);
+        Account fromAccount = bank.findAccount(from);
+        Account toAccount = bank.findAccount(to);
+        if (fromAccount != null && toAccount != null) {
+            bank.transfer(fromAccount, toAccount, amount);
+        } else {
+            System.out.println("Invalid account number.");
+        }
     }
 }

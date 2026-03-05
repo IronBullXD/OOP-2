@@ -1,5 +1,9 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 public class TransactionRecord {
+
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
 
     private String type;
     private String accountNumber;
@@ -49,8 +53,10 @@ public class TransactionRecord {
         if (targetAccountNumber != null) {
             transferInfo = " -> " + targetAccountNumber;
         }
+
+        String formattedDate = date.format(DISPLAY_DATE_FORMAT);
         System.out.println(type + " | Account: " + accountNumber + transferInfo +
                 " | Amount: " + amount +
-                " | Date: " + date);
+                " | Date: " + formattedDate);
     }
 }

@@ -60,7 +60,7 @@ public class Menu {
                 case 8:
                     transactionHistoryMenu();
                     break;
-                case 9:
+                case 0:
                     System.out.println("Logging out... Thank you!");
                     break;
                 default:
@@ -68,37 +68,30 @@ public class Menu {
                     pauseForContinue();
             }
 
-        } while (choice != 9);
+        } while (choice != 0);
     }
 
     private void createSavingsPage() {
         runRepeatablePage("CREATE SAVINGS ACCOUNT", this::createSavings, "Create another account");
     }
-
     private void createCurrentPage() {
         runRepeatablePage("CREATE CURRENT ACCOUNT", this::createCurrent, "Create another account");
     }
-
     private void depositPage() {
         runRepeatablePage("DEPOSIT", this::deposit, "New deposit");
     }
-
     private void withdrawPage() {
         runRepeatablePage("WITHDRAW", this::withdraw, "New withdrawal");
     }
-
     private void transferPage() {
         runRepeatablePage("TRANSFER", this::transfer, "New transfer");
     }
-
     private void viewAccountsPage() {
         runBackOnlyPage("ACCOUNTS", bank::showAllAccounts);
     }
-
     private void generateStatementPage() {
         runRepeatablePage("BANK STATEMENT", this::generateStatement, "View another statement");
     }
-
     private boolean loginPrompt() {
         clearScreen();
         printSectionHeader("SYSTEM LOGIN");
@@ -119,7 +112,6 @@ public class Menu {
             return false;
         }
     }
-
     private boolean generateStatement() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -128,7 +120,6 @@ public class Menu {
         bank.generateStatement(accNo);
         return true;
     }
-
     private boolean createSavings() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -148,7 +139,6 @@ public class Menu {
         bank.addAccount(new SavingsAccount(accNo, holder, balance));
         return true;
     }
-
     private boolean createCurrent() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -168,7 +158,6 @@ public class Menu {
         bank.addAccount(new CurrentAccount(accNo, holder, balance));
         return true;
     }
-
     private boolean deposit() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -188,7 +177,6 @@ public class Menu {
         }
         return true;
     }
-
     private boolean withdraw() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -217,7 +205,6 @@ public class Menu {
         }
         return true;
     }
-
     private boolean transfer() {
         String from = readTextOrBack("From Account");
         if (from == null) {
@@ -252,7 +239,6 @@ public class Menu {
         }
         return true;
     }
-
     private void transactionHistoryMenu() {
         int choice;
         do {
@@ -271,15 +257,14 @@ public class Menu {
                 case 3:
                     filterTransactionsMenu();
                     break;
-                case 4:
+                case 0:
                     break;
                 default:
                     System.out.println("Invalid choice.");
                     pauseForContinue();
             }
-        } while (choice != 4);
+        } while (choice != 0);
     }
-
     private boolean viewByAccountNumber() {
         String accNo = readTextOrBack("Account Number");
         if (accNo == null) {
@@ -288,7 +273,6 @@ public class Menu {
         historyService.showTransactionsByAccount(accNo);
         return true;
     }
-
     private void filterTransactionsMenu() {
         int choice;
         do {
@@ -307,20 +291,20 @@ public class Menu {
                 case 3:
                     runRepeatablePage("FILTER BY MINIMUM AMOUNT", this::filterByMinimumAmount, "Filter another amount");
                     break;
-                case 4:
+                case 0:
                     break;
                 default:
                     System.out.println("Invalid choice.");
                     pauseForContinue();
             }
-        } while (choice != 4);
+        } while (choice != 0);
     }
-
     private void runRepeatablePage(String title, RepeatableAction action, String repeatLabel) {
         int choice;
         do {
             clearScreen();
             printSectionHeader(title);
+            printBackHint();
             boolean completed = action.execute();
             if (!completed) {
                 return;
@@ -340,9 +324,9 @@ public class Menu {
         while (true) {
             System.out.println();
             System.out.println("1. " + repeatLabel);
-            System.out.println("2. Back");
+            System.out.println("0. Back");
             int choice = readIntChoice("Choose option: ");
-            if (choice == 1 || choice == 2) {
+            if (choice == 1 || choice == 0) {
                 return choice;
             }
             System.out.println("Invalid choice.");
@@ -402,7 +386,7 @@ public class Menu {
         System.out.println("6. View Accounts");
         System.out.println("7. Generate Bank Statement");
         System.out.println("8. Transaction History");
-        System.out.println("9. Exit");
+        System.out.println("0. Exit");
     }
 
     private void showTransactionHistoryMenu() {
@@ -410,7 +394,7 @@ public class Menu {
         System.out.println("1. View All Transactions");
         System.out.println("2. View By Account Number");
         System.out.println("3. Filter Transactions");
-        System.out.println("4. Back");
+        System.out.println("0. Back");
     }
 
     private void showFilterTransactionsMenu() {
@@ -418,7 +402,7 @@ public class Menu {
         System.out.println("1. By Type");
         System.out.println("2. By Date Range");
         System.out.println("3. By Minimum Amount");
-        System.out.println("4. Back");
+        System.out.println("0. Back");
     }
 
     private void printSectionHeader(String title) {
@@ -439,7 +423,7 @@ public class Menu {
 
     private String readTextOrBack(String fieldLabel) {
         while (true) {
-            System.out.print(fieldLabel + " (0 to back): ");
+            System.out.print(fieldLabel + ": ");
             String input = scanner.nextLine().trim();
             if ("0".equals(input)) {
                 return null;
@@ -453,7 +437,7 @@ public class Menu {
 
     private Double readPositiveDoubleOrBack(String fieldLabel) {
         while (true) {
-            System.out.print(fieldLabel + " (0 to back): ");
+            System.out.print(fieldLabel + ": ");
             String input = scanner.nextLine().trim();
             if ("0".equals(input)) {
                 return null;
@@ -473,7 +457,7 @@ public class Menu {
 
     private Double readNonNegativeDoubleOrBack(String fieldLabel) {
         while (true) {
-            System.out.print(fieldLabel + " (0 to back): ");
+            System.out.print(fieldLabel + ": ");
             String input = scanner.nextLine().trim();
             if ("0".equals(input)) {
                 return null;
@@ -493,7 +477,7 @@ public class Menu {
 
     private LocalDate readDateOrBack(String fieldLabel) {
         while (true) {
-            System.out.print(fieldLabel + " (YYYY-MM-DD, 0 to back): ");
+            System.out.print(fieldLabel + " (YYYY-MM-DD): ");
             String input = scanner.nextLine().trim();
             if ("0".equals(input)) {
                 return null;
@@ -508,7 +492,7 @@ public class Menu {
 
     private Boolean confirmYesNoOrBack(String prompt) {
         while (true) {
-            System.out.print(prompt + " (Y/N, 0 to back): ");
+            System.out.print(prompt + " (Y/N): ");
             String input = scanner.nextLine().trim().toLowerCase();
             if ("0".equals(input)) {
                 return null;
@@ -521,6 +505,10 @@ public class Menu {
             }
             System.out.println("Invalid input. Enter Y, N, or 0.");
         }
+    }
+
+    private void printBackHint() {
+        System.out.println("Type 0 at any prompt to go back.\n");
     }
 
     private void pauseForContinue() {
